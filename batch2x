@@ -1,31 +1,31 @@
 #!/usr/bin/python
 
-import sys, getopt
+import sys
 import os.path
 import os
 import argparse
-from pathlib import Path
+
 
 def convert():
 	if args.file != "":
 		print (args.file)
-		commandstr = "waifu2x-ncnn-vulkan -i " + args.file + " -n " + str(args.noise) + " -s " + str(args.scale)  + " -o " + os.path.splitext(args.file)[0] + "_2x.png"
+		commandstr = "waifu2x-ncnn-vulkan -i " + args.file + " -n " + str(args.noise) + " -s " + str(args.scale)  + " -o "+ "/" + args.outdir + "/" + os.path.splitext(args.file)[0] + "_2x.png"
 		print(commandstr)
 		command = os.popen(commandstr)
 		print(command.read())
 		command.close()
 	elif args.directory != "":
-		Path(args.directory + "/Original").mkdir(parents=True, exist_ok=True)
+		os.makedirs(args.directory + "/Original",exist_ok=True)
 		for file in os.listdir(args.directory):
 			print(file)
 			if file.endswith(('.jpeg', '.png', '.gif')):
-				commandstr = "waifu2x-ncnn-vulkan -i " + file + " -n " + str(args.noise) + " -s " + str(args.scale)  + " -o " + os.path.splitext(file)[0] + "_2x.png"
+				commandstr = "waifu2x-ncnn-vulkan -i " + args.directory+"/"+ file + " -n " + str(args.noise) + " -s " + str(args.scale)  + " -o " + args.directory + "/" + args.outdir + "/" + os.path.splitext(file)[0] + "_2x.png"
 				print(commandstr)
 				command = os.popen(commandstr)
 				print(command.read())
 			else:
 				print("Skipping File: " + file)
-			os.rename(file, args.directory+"/Original/"+file)
+			os.rename(args.directory+"/"+file, args.directory+"/Original/"+file)
 			print("Moved original file to /Original")
 
 
@@ -42,8 +42,8 @@ if ((args.directory != "") & (args.file != "")) | ((args.directory == "") & (arg
     print("Pick either a directory or file baka")
     sys.exit(2)
         
-if (args.outdir != "") & (not os.path.isdir(args.outdir)):
-	os.mkdir(args.outdir)
+if (args.outdir != "") & (not os.path.isdir(args.directory + "/" + args.outdir)):
+	os.mkdir(args.directory + "/" + args.outdir)
 
 if (os.path.isdir(args.directory) | os.path.isfile(args.file)):
 	convert()
