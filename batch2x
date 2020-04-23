@@ -4,7 +4,7 @@ import sys, getopt
 import os.path
 import os
 import argparse
-
+from pathlib import Path
 
 def convert():
 	if args.file != "":
@@ -15,8 +15,7 @@ def convert():
 		print(command.read())
 		command.close()
 	elif args.directory != "":
-		if not os.path.exists(args.directory + "/Original"):
-			os.mkdir(args.directory + "/Original")
+		Path(args.directory + "/Original").mkdir(parents=True, exist_ok=True)
 		for file in os.listdir(args.directory):
 			print(file)
 			if file.endswith(('.jpeg', '.png', '.gif')):
