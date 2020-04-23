@@ -1,0 +1,53 @@
+#!/usr/bin/python
+
+import sys, getopt
+import os.path
+import subprocess
+import os
+import argparse
+
+
+def convert():
+	if args.file != "":
+		print (args.file)
+		commandstr = "waifu2x-ncnn-vulkan -i " + args.file + " -n " + str(args.noise) + " -s " + str(args.scale)  + " -o " + os.path.splitext(args.file)[0] + "_2x.png"
+		print(commandstr)
+		command = os.popen(commandstr)
+		print(command.read())
+		command.close()
+	elif args.directory != "":
+		if not os.path.exists(args.directory + "/Original"):
+			os.mkdir(args.directory + "/Original")
+		for file in os.listdir(args.directory):
+			print(file)
+			if file.endswith(('.jpeg', '.png', '.gif')):
+				commandstr = "waifu2x-ncnn-vulkan -i " + file + " -n " + str(args.noise) + " -s " + str(args.scale)  + " -o " + os.path.splitext(file)[0] + "_2x.png"
+				print(commandstr)
+				command = os.popen(commandstr)
+				print(command.read())
+			else:
+				print("Skipping File: " + file)
+			os.rename(file, args.directory+"/Original/"+file)
+			print("Moved original file to /Original")
+
+
+
+parser = argparse.ArgumentParser(description='A waifu2x batch script - Requires waifu2x-ncnn-vulkan')
+parser.add_argument("-f", "--file", help="Input File", default = "",type=str)
+parser.add_argument("-d", "--directory", help="Input Directory", default = "",type=str)
+parser.add_argument("-o", "--outdir", help="Output Directory", default = "",type=str)
+parser.add_argument("-n", "--noise", type=int, choices=range(-1, 4), help="Denoise Level", default=1)
+parser.add_argument("-s", "--scale", type=int, choices=range(1, 3), help="Image Scale", default=2)
+args = parser.parse_args()
+
+if ((args.directory != "") & (args.file != "")) | ((args.directory == "") & (args.file == "")):
+        print("Pick either a directory or file baka")
+        
+if (args.outdir != "") & (not os.path.isdir(args.outdir)):
+	os.mkdir(args.outdir)
+
+if (os.path.isdir(args.directory) | os.path.isfile(args.file)):
+	convert()
+else:
+	print("File or Directory doesn't exist")
+	sys.exit(2)
