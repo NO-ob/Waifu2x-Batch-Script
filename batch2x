@@ -18,7 +18,7 @@ def convert():
 		os.makedirs(args.directory + "/Original",exist_ok=True)
 		for file in os.listdir(args.directory):
 			print(file)
-			if file.endswith(('.jpeg', '.png', '.gif')):
+			if file.endswith(('.jpeg', '.png', '.gif','.jpg')):
 				commandstr = "waifu2x-ncnn-vulkan -i " + args.directory+"/"+ file + " -n " + str(args.noise) + " -s " + str(args.scale)  + " -o " + args.directory + "/" + args.outdir + "/" + os.path.splitext(file)[0] + "_2x.png"
 				print(commandstr)
 				command = os.popen(commandstr)
