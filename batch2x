@@ -2,7 +2,6 @@
 
 import sys, getopt
 import os.path
-import subprocess
 import os
 import argparse
 
@@ -41,7 +40,8 @@ parser.add_argument("-s", "--scale", type=int, choices=range(1, 3), help="Image 
 args = parser.parse_args()
 
 if ((args.directory != "") & (args.file != "")) | ((args.directory == "") & (args.file == "")):
-        print("Pick either a directory or file baka")
+    print("Pick either a directory or file baka")
+    sys.exit(2)
         
 if (args.outdir != "") & (not os.path.isdir(args.outdir)):
 	os.mkdir(args.outdir)
