@@ -23,10 +23,11 @@ def convert():
 				print(commandstr)
 				command = os.popen(commandstr)
 				print(command.read())
+				os.rename(args.directory+"/"+file, args.directory+"/Original/"+file)
+				print("Moved original file to /Original")
 			else:
 				print("Skipping File: " + file)
-			os.rename(args.directory+"/"+file, args.directory+"/Original/"+file)
-			print("Moved original file to /Original")
+			
 
 
 
